@@ -35,6 +35,16 @@ export function FullTimetableApp() {
     [timeOptions],
   );
 
+  const statusText = isFetching || loadingBase
+    ? 'Lark Base 接続中'
+    : !hasAttemptedConnection
+      ? 'Base API 未接続（接続を試してください）'
+      : hasResolvedContext
+        ? 'Lark Base 接続あり'
+        : 'Base API 未接続';
+
+  const showConnectionWarning = isLarkEnv && !hasResolvedContext;
+
   return (
     <>
       <div className="no-print" style={{ padding: '0 16px' }}>
@@ -50,16 +60,7 @@ export function FullTimetableApp() {
           }}
         >
           <div>画面描画: React 起動済み</div>
-          <div>
-            接続状態:{' '}
-            {isFetching || loadingBase
-              ? 'Lark Base 接続中'
-              : !hasAttemptedConnection
-                ? 'Base API 未接続（接続を試してください）'
-                : hasResolvedContext
-                  ? 'Lark Base 接続あり'
-                  : 'Base API 未接続'}
-          </div>
+          <div>接続状態: {statusText}</div>
           {errorMsg ? <div style={{ color: '#b91c1c', marginTop: '4px' }}>詳細: {errorMsg}</div> : null}
           {warningMsg ? <div style={{ color: '#b45309', marginTop: '4px' }}>補足: {warningMsg}</div> : null}
           {detectedFields.length > 0 ? (
@@ -94,10 +95,10 @@ export function FullTimetableApp() {
         </div>
       </div>
 
-      {!isSupportedContext ? (
+      {!isSupportedContext && isLarkEnv ? (
         <div
           style={{
-            margin: '0 16px',
+            margin: '0 16px 16px',
             padding: '24px',
             background: '#fff',
             border: '1px solid #e2e8f0',
@@ -107,16 +108,18 @@ export function FullTimetableApp() {
         >
           <h2 style={{ marginBottom: '8px', fontSize: '20px' }}>このタブでは利用できません</h2>
           <p style={{ color: '#475569', lineHeight: 1.6 }}>
-            このプラグインは指定された時間割 Base でのみ利用できます。対象外の Base では編集や表示を行いません。
+            このプラグインは指定された時間割 Base での利用を想定しています。
           </p>
           {unsupportedReason ? (
             <div style={{ marginTop: '12px', color: '#b91c1c' }}>詳細: {unsupportedReason}</div>
           ) : null}
         </div>
-      ) : !hasResolvedContext ? (
+      ) : null}
+
+      {showConnectionWarning ? (
         <div
           style={{
-            margin: '0 16px',
+            margin: '0 16px 16px',
             padding: '24px',
             background: '#fff',
             border: '1px solid #e2e8f0',
@@ -126,27 +129,29 @@ export function FullTimetableApp() {
         >
           <h2 style={{ marginBottom: '8px', fontSize: '20px' }}>Base 接続を待っています</h2>
           <p style={{ color: '#475569', lineHeight: 1.6 }}>
-            予約管理テーブルへ接続できるまで、時間割本体はまだ描画しません。上の接続ボタンで再試行してください。
+            予約管理テーブルへ接続できるまで、データ保存は行えません。レイアウト確認はこのまま可能です。
           </p>
         </div>
-      ) : (
-        <TimetableWorkspace
-          assignments={assignments}
-          doctorOptions={doctorOptions}
-          nurseOptions={nurseOptions}
-          patientOptions={patientOptions}
-          timeOptions={effectiveTimeOptions}
-          patientTypeOptions={patientTypeOptions}
-          patientStatusOptions={patientStatusOptions}
-          addAssignment={addAssignment}
-          updateAssignment={updateAssignment}
-          deleteAssignment={deleteAssignment}
-          refresh={refresh}
-        />
-      )}
+      ) : null}
+
+      <TimetableWorkspace
+        assignments={assignments}
+        doctorOptions={doctorOptions}
+        nurseOptions={nurseOptions}
+        patientOptions={patientOptions}
+        timeOptions={effectiveTimeOptions}
+        patientTypeOptions={patientTypeOptions}
+        patientStatusOptions={patientStatusOptions}
+        addAssignment={addAssignment}
+        updateAssignment={updateAssignment}
+        deleteAssignment={deleteAssignment}
+        refresh={refresh}
+      />
 
       {!isLarkEnv ? (
-        <div style={{ padding: '16px', color: '#b45309' }}>ローカルモードまたは Lark 外で起動しています。</div>
+        <div style={{ padding: '16px', color: '#b45309' }}>
+          GitHub Pages などの単体表示では Base 連携なしで時間割レイアウトのみ表示します。
+        </div>
       ) : null}
     </>
   );
