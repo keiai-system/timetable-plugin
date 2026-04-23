@@ -1,0 +1,185 @@
+.nursing-diary-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    width: 210mm; /* A4 width */
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+@media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        background: white;
+    }
+    .app-header, .no-print, .diary-tabs, .diary-controls {
+        display: none !important;
+    }
+    .nursing-diary-container {
+        width: 100%;
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+    }
+    .diary-report-table th,
+    .diary-report-table td {
+        border: 1.5px solid #000;
+    }
+}
+
+.diary-report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+}
+
+.diary-report-table th,
+.diary-report-table td {
+    border: 1px solid #333;
+    padding: 6px;
+    text-align: left;
+    height: 30px;
+}
+
+.diary-report-table .header-cell {
+    background-color: #f8fafc;
+    font-weight: bold;
+    text-align: center;
+    width: 80px;
+    font-size: 13px;
+    line-height: 1.2;
+}
+
+.diary-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 4px;
+    font-size: 14px;
+    background: transparent;
+}
+
+.diary-textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 4px;
+    font-size: 14px;
+    resize: none;
+    background: transparent;
+    display: block;
+}
+
+.diary-textarea.small-height {
+    min-height: 60px; /* 縦幅を揃えるために固定の最小高さを設定 */
+}
+
+.diary-textarea.mid-height {
+    min-height: 50px;
+    font-size: 13px;
+}
+
+.diary-textarea:focus,
+.diary-input:focus {
+    background-color: #f0f9ff;
+}
+
+.section-title {
+    text-align: center;
+    font-weight: bold;
+    background-color: #f8fafc;
+    padding: 4px;
+    border: 1px solid #333;
+    border-bottom: none;
+}
+
+/* 印刷用設定 */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .nursing-diary-container, .nursing-diary-container * {
+        visibility: visible;
+    }
+    .nursing-diary-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none;
+        padding: 0;
+    }
+    .no-print {
+        display: none !important;
+    }
+    .diary-report-table td {
+        border-color: #000;
+    }
+}
+
+.diary-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.diary-tab-item {
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: #64748b;
+    position: relative;
+}
+
+.diary-tab-item.active {
+    color: #3b82f6;
+}
+
+.diary-tab-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #3b82f6;
+}
+
+.diary-tab-item:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.diary-controls {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.control-label {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.diary-select, .diary-datepicker {
+    padding: 6px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 14px;
+}
