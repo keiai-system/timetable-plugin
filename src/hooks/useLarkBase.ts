@@ -33,6 +33,15 @@ function isTimeoutError(error: unknown): boolean {
     return String((error as Error)?.message ?? error).includes('time out');
 }
 
+function normalizeDateString(value: string): string {
+    const trimmed = value.trim();
+    if (!trimmed) return '';
+    const matched = trimmed.match(/^(\d{4})[/-](\d{1,2})[/-](\d{1,2})/);
+    if (!matched) return trimmed;
+    const [, year, month, day] = matched;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+}
+
 async function wait(ms: number): Promise<void> {
     await new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -362,6 +371,9 @@ export function useLarkBase() {
                         }
                     }
                     const val = await f.getCellString(id);
+                    if (name === '譌･莉・) {
+                        return normalizeDateString(val || '');
+                    }
                     return val || '';
                 } catch (e) {
                     return '';

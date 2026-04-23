@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DndContext, type DragEndEvent } from '@dnd-kit/core';
 import { HeaderControls } from './HeaderControls';
 import { WeekView } from './WeekView';
@@ -43,6 +43,15 @@ export function TimetableWorkspace(props: TimetableWorkspaceProps) {
   const [modalData, setModalData] = useState<Assignment | null>(null);
   const [defaultDate, setDefaultDate] = useState('');
   const [defaultTime, setDefaultTime] = useState('09:00');
+
+  useEffect(() => {
+    if (assignments.length === 0) return;
+    const firstAssignment = [...assignments]
+      .sort((a, b) => `${a.date}T${a.time}`.localeCompare(`${b.date}T${b.time}`))[0];
+    if (firstAssignment) {
+      setCurrentDate(new Date(`${firstAssignment.date}T00:00:00`));
+    }
+  }, [assignments]);
 
   const openCreateModal = async (date: string, time: string) => {
     if (doctorOptions.length === 0 || nurseOptions.length === 0) {
