@@ -1,4 +1,5 @@
-name: Deploy GitHub Pages
+name: GitHub Pages デプロイ
+run-name: GitHub Pages をデプロイ
 
 on:
   push:
@@ -19,25 +20,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: チェックアウト
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Node をセットアップ
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: 依存関係をインストール
         run: npm ci
 
-      - name: Build Vite site
+      - name: Vite サイトをビルド
         run: npm run build
 
-      - name: Configure Pages
+      - name: Pages を設定
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: アーティファクトをアップロード
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
@@ -49,6 +50,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - name: GitHub Pages へデプロイ
         id: deployment
         uses: actions/deploy-pages@v4
